@@ -57,11 +57,11 @@ while index <= READ_NUM:
     data['ts'] = int(time.time() * 1000)
     data['rn'] = random.randint(0, 1000)
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
-    data['s'] = cal_hash(encode_data(data))
     # Add a random read time
     random_read_time = random.randint(28, 30)
-    # data['rt'] = random_read_time
-
+    data['rt'] = random_read_time
+    # prepare hash
+    data['s'] = cal_hash(encode_data(data))
     logging.info(f"⏱️ 尝试第 {index} 次阅读, 时间：{random_read_time}s...")
 
     # Sleep to mimic reading
