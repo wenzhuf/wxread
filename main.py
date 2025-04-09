@@ -50,7 +50,7 @@ def get_wr_skey():
             return cookie.split('=')[-1][:8]
     return None
 
-
+total_ream_time_in_seconds = 0
 index = 1
 while index <= READ_NUM:
     data['ct'] = int(time.time())
@@ -58,15 +58,20 @@ while index <= READ_NUM:
     data['rn'] = random.randint(0, 1000)
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
-
+    # Add a random read time
+    random_read_time = random.randint(28, 120)
+    data['rt'] = random_read_time
+    # Sleep to mimic reading
+    time.sleep(random_read_time + 10)
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
 
     if 'succ' in resData:
         index += 1
-        time.sleep(30)
-        logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
+        # update the total read time counter
+        total_ream_time_in_seconds += random_read_time
+        logging.info(f"✅ 阅读成功，阅读进度：{total_ream_time_in_seconds // 60} 分钟")
 
     else:
         logging.warning("❌ cookie 已过期，尝试刷新...")
