@@ -61,9 +61,11 @@ while index <= READ_NUM:
     # Add a random read time
     random_read_time = random.randint(28, 120)
     data['rt'] = random_read_time
+
+    logging.info(f"⏱️ 尝试第 {index} 次阅读, 时间：{random_read_time}s...")
+
     # Sleep to mimic reading
     time.sleep(random_read_time + 10)
-    logging.info(f"⏱️ 尝试第 {index} 次阅读...")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
 
