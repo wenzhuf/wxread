@@ -60,7 +60,7 @@ while index <= READ_NUM:
     data['s'] = cal_hash(encode_data(data))
     # Add a random read time
     random_read_time = random.randint(28, 30)
-    data['rt'] = random_read_time
+    # data['rt'] = random_read_time
 
     logging.info(f"⏱️ 尝试第 {index} 次阅读, 时间：{random_read_time}s...")
 
