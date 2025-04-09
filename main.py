@@ -58,7 +58,7 @@ while index <= READ_NUM:
     data['rn'] = random.randint(0, 1000)
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     # Add a random read time
-    random_read_time = random.randint(28, 30)
+    random_read_time = random.randint(28, 120)
     data['rt'] = random_read_time
     # prepare hash
     data['s'] = cal_hash(encode_data(data))
