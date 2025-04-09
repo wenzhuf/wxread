@@ -59,7 +59,7 @@ while index <= READ_NUM:
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
     # Add a random read time
-    random_read_time = random.randint(28, 120)
+    random_read_time = random.randint(28, 30)
     data['rt'] = random_read_time
 
     logging.info(f"⏱️ 尝试第 {index} 次阅读, 时间：{random_read_time}s...")
@@ -76,6 +76,7 @@ while index <= READ_NUM:
         logging.info(f"✅ 阅读成功，阅读进度：{total_ream_time_in_seconds // 60} 分钟")
 
     else:
+        logging.error(f"阅读失败，response：{resData}")
         logging.warning("❌ cookie 已过期，尝试刷新...")
         new_skey = get_wr_skey()
         if new_skey:
