@@ -56,13 +56,14 @@ while index <= READ_NUM:
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
     data['rn'] = random.randint(0, 1000)
+    data['co'] = data['co'] + 200
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     # Add a random read time
     random_read_time = random.randint(28, 120)
     data['rt'] = random_read_time
     # prepare hash
     data['s'] = cal_hash(encode_data(data))
-    logging.info(f"⏱️ 尝试第 {index} 次阅读, 时间：{random_read_time}s...")
+    logging.info(f"⏱️ 尝试第 {index} 次阅读, 时间：{random_read_time}s, data['co']: {data['co']}...")
 
     # Sleep to mimic reading
     time.sleep(random_read_time + 10)
