@@ -52,28 +52,24 @@ def get_wr_skey():
     return None
 
 def pre_reading():
-    new_trace_id_1 = str(uuid.uuid4().hex)
-    new_trace_id_2 = str(uuid.uuid4().hex[:16])
-    if 'sentry-trace' in headers:
-        logging.info(f"sentry-trace:{headers['sentry-trace']}")
-        headers['sentry-trace'] = f"{new_trace_id_1}-{new_trace_id_2}"
-        logging.info(f"sentry-trace:{headers['sentry-trace']}")
-    else:
-        logging.warning("No sentry-trace")
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context()
+        context.add_cookies(cookies)
+        page = context.new_page()
     
-    if 'baggage' in headers:
-        logging.info(f"baggage:{headers['baggage']}")
-        pairs = headers['baggage'].split(',')
-        updated_pairs = [
-            f"sentry-trace_id={new_trace_id_1}" if pair.startswith("sentry-trace_id=") else pair
-            for pair in pairs
-        ]
-        headers['baggage'] = ','.join(updated_pairs)
-        logging.info(f"baggage:{headers['baggage']}")
-    else:
-        logging.warning("No baggage")
-    response = requests.get(NOTIFY_URL, headers=headers, cookies=cookies)
-    logging.info(f"🔄 prereading: {response}")
+        page.goto("https://weread.qq.com/web/reader/ce032b305a9bc1ce0b0dd2akf4b32ef025ef4b9ec30acd6")
+        page.wait_for_timeout(5000)
+    
+        cookies = context.cookies()
+        print("Cookies:", cookies)
+    
+        content = page.content()
+        print("Page content:", content[:300])
+        page.wait_for_timeout(300000)
+        browser.close()
+
 
 pre_reading()
 total_ream_time_in_seconds = 0
