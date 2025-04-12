@@ -54,12 +54,9 @@ def get_wr_skey():
 
 def pre_reading():
     from playwright.sync_api import sync_playwright
-
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context()
-
-        # Convert dict to Playwright-compatible list of cookie dicts
         cookies_list = [
             {
                 "name": name,
@@ -74,12 +71,13 @@ def pre_reading():
         page = context.new_page()
         page.goto("https://weread.qq.com/web/reader/ce032b305a9bc1ce0b0dd2akf4b32ef025ef4b9ec30acd6")
         page.wait_for_timeout(5000)
+        page.screenshot(path="screenshot.png")
 
         newcookies = context.cookies()
-        print("Cookies:", newcookies)
+        logging.info("Cookies:", newcookies)
 
         content = page.content()
-        print("Page content:", content[:300])
+        logging.info("Page content:", content[:300])
 
         page.wait_for_timeout(300000)  # Keep the page open for 5 minutes
         browser.close()
