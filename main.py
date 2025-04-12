@@ -9,6 +9,7 @@ import requests
 import urllib.parse
 from push import push
 from config import dataArray, headers, cookies, READ_NUM, PUSH_METHOD
+import uuid
 
 # 配置日志格式
 logger = logging.getLogger(__name__)
@@ -49,11 +50,23 @@ def get_wr_skey():
             return cookie.split('=')[-1][:8]
     return None
 
+new_trace_id_1 = str(uuid.uuid4().hex)
+new_trace_id_2 = str(uuid.uuid4().hex[:16])
 if 'sentry-trace' in headers:
+    logging.info(f"sentry-trace:{headers['sentry-trace']}")
+    headers['sentry-trace'] = f"{new_trace_id_1}-{new_trace_id_2}"
     logging.info(f"sentry-trace:{headers['sentry-trace']}")
 else:
     logging.warning("No sentry-trace")
+
 if 'baggage' in headers:
+    logging.info(f"baggage:{headers['baggage']}")
+    pairs = headers['baggage'].split(',')
+    updated_pairs = [
+        f"sentry-trace_id={new_trace_id_1}" if pair.startswith("sentry-trace_id=") else pair
+        for pair in pairs
+    ]
+    headers['baggage'] = ','.join(updated_pairs)
     logging.info(f"baggage:{headers['baggage']}")
 else:
     logging.warning("No baggage")
