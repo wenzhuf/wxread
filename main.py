@@ -53,10 +53,10 @@ if 'sentry-trace' in headers:
     logging.info(f"sentry-trace:{headers['sentry-trace']}")
 else:
     logging.warning("No sentry-trace")
-if 'sentry-trace_id' in cookies:
-    logging.info(f"sentry-trace_id:{cookies['sentry-trace_id']}")
+if 'baggage' in cookies:
+    logging.info(f"baggage:{cookies[baggage']}")
 else:
-    logging.warning("No sentry-trace_id")
+    logging.warning("No baggage")
     
 total_ream_time_in_seconds = 0
 index = 1
