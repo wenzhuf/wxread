@@ -56,7 +56,10 @@ def pre_reading():
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        context = browser.new_context()
+        context = browser.new_context(
+            record_video_dir="videos/",
+            record_video_size={"width": 1280, "height": 720},
+        )
         cookies_list = [
             {
                 "name": name,
@@ -73,11 +76,17 @@ def pre_reading():
         page.wait_for_timeout(5000)
         page.screenshot(path="screenshot.png")
 
+        for i in range(10):
+            logging.info(f"点击第 {i + 1} 次按钮")
+            try:
+                button = page.locator("button[class*='renderTarget_pager_button_right']")
+                button.click(timeout=5000)  # 最多等待5秒找元素
+            except Exception as e:
+                logging.error("点击失败，可能找不到按钮：", e)
+            time.sleep(30)
+                    
         newcookies = context.cookies()
-        logging.info("Cookies:", newcookies)
-
-        content = page.content()
-        logging.info("Page content:", content[:300])
+        logging.info(f"Cookies:{newcookies}")
 
         page.wait_for_timeout(10000)  # Keep the page open for 5 minutes
         browser.close()
