@@ -54,7 +54,7 @@ if 'sentry-trace' in headers:
 else:
     logging.warning("No sentry-trace")
 if 'baggage' in cookies:
-    logging.info(f"baggage:{cookies[baggage']}")
+    logging.info(f"baggage:{cookies['baggage']}")
 else:
     logging.warning("No baggage")
     
