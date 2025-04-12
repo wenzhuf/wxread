@@ -50,7 +50,7 @@ def get_wr_skey():
     return None
 
 if 'sentry-trace' in headers:
-    logging.info(f"sentry-trace:{headers['sentry-trace']}"
+    logging.info(f"sentry-trace:{headers['sentry-trace']}")
 else:
     logging.warning("No sentry-trace")
 if 'sentry-trace_id' in cookies:
