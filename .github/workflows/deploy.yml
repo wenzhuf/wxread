@@ -65,3 +65,9 @@ jobs:
       with:
         name: screenshot
         path: screenshot.png
+
+    - name: Upload video artifact
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: test-videos
+        path: videos/
