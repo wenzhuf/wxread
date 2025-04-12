@@ -20,10 +20,6 @@ COOKIE_DATA = {"rq": "%2Fweb%2Fbook%2Fread"}
 READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
 
-if 'sentry-trace' in headers:
-    logging.debug(f"sentry-trace:{headers['sentry-trace']}")
-if 'sentry-trace_id' in cookies:
-    logging.debug(f"sentry-trace_id:{cookies['sentry-trace_id']}")
 def encode_data(data):
     """数据编码"""
     return '&'.join(f"{k}={urllib.parse.quote(str(data[k]), safe='')}" for k in sorted(data.keys()))
@@ -53,6 +49,15 @@ def get_wr_skey():
             return cookie.split('=')[-1][:8]
     return None
 
+if 'sentry-trace' in headers:
+    logging.info(f"sentry-trace:{headers['sentry-trace']}"
+else:
+    logging.warning("No sentry-trace")
+if 'sentry-trace_id' in cookies:
+    logging.info(f"sentry-trace_id:{cookies['sentry-trace_id']}")
+else:
+    logging.warning("No sentry-trace_id")
+    
 total_ream_time_in_seconds = 0
 index = 1
 while index <= READ_NUM:
