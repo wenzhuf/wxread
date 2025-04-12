@@ -52,7 +52,7 @@ def get_wr_skey():
     return None
 
 
-def pre_reading(aacookies):
+def pre_reading():
     from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
