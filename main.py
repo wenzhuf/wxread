@@ -83,51 +83,51 @@ def pre_reading():
         browser.close()
 
 pre_reading()
-total_ream_time_in_seconds = 0
-index = 1
-while index <= READ_NUM:
-    data = dataArray[index % len(dataArray)]
-    data.pop('s',None)
-    data['ct'] = int(time.time())
-    data['ts'] = int(time.time() * 1000)
-    data['rn'] = random.randint(0, 1000)
-    data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
-    # Add a random read time
-    # random_read_time = random.randint(28, 120)
-    random_read_time = 30
-    data['rt'] = random_read_time
-    # prepare hash
-    data['s'] = cal_hash(encode_data(data))
-    logging.info(f"⏱️ 尝试第 {index} 次阅读, 时间：{random_read_time}s, data['co']: {data['co']}...")
+# total_ream_time_in_seconds = 0
+# index = 1
+# while index <= READ_NUM:
+#     data = dataArray[index % len(dataArray)]
+#     data.pop('s',None)
+#     data['ct'] = int(time.time())
+#     data['ts'] = int(time.time() * 1000)
+#     data['rn'] = random.randint(0, 1000)
+#     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
+#     # Add a random read time
+#     # random_read_time = random.randint(28, 120)
+#     random_read_time = 30
+#     data['rt'] = random_read_time
+#     # prepare hash
+#     data['s'] = cal_hash(encode_data(data))
+#     logging.info(f"⏱️ 尝试第 {index} 次阅读, 时间：{random_read_time}s, data['co']: {data['co']}...")
 
-    # Sleep to mimic reading
-    time.sleep(random_read_time + 10)
-    response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
-    resData = response.json()
+#     # Sleep to mimic reading
+#     time.sleep(random_read_time + 10)
+#     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
+#     resData = response.json()
 
-    if 'succ' in resData:
-        index += 1
-        # update the total read time counter
-        total_ream_time_in_seconds += random_read_time
-        logging.info(f"✅ 阅读成功，阅读进度：{total_ream_time_in_seconds // 60} 分钟")
+#     if 'succ' in resData:
+#         index += 1
+#         # update the total read time counter
+#         total_ream_time_in_seconds += random_read_time
+#         logging.info(f"✅ 阅读成功，阅读进度：{total_ream_time_in_seconds // 60} 分钟")
 
-    else:
-        logging.error(f"阅读失败，response：{resData}")
-        logging.warning("❌ cookie 已过期，尝试刷新...")
-        new_skey = get_wr_skey()
-        if new_skey:
-            cookies['wr_skey'] = new_skey
-            logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}")
-            logging.info(f"🔄 重新本次阅读。")
-        else:
-            ERROR_CODE = "❌ 无法获取新密钥或者WXREAD_CURL_BASH配置有误，终止运行。"
-            logging.error(ERROR_CODE)
-            push(ERROR_CODE, PUSH_METHOD)
-            raise Exception(ERROR_CODE)
-    data.pop('s', None)
+#     else:
+#         logging.error(f"阅读失败，response：{resData}")
+#         logging.warning("❌ cookie 已过期，尝试刷新...")
+#         new_skey = get_wr_skey()
+#         if new_skey:
+#             cookies['wr_skey'] = new_skey
+#             logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}")
+#             logging.info(f"🔄 重新本次阅读。")
+#         else:
+#             ERROR_CODE = "❌ 无法获取新密钥或者WXREAD_CURL_BASH配置有误，终止运行。"
+#             logging.error(ERROR_CODE)
+#             push(ERROR_CODE, PUSH_METHOD)
+#             raise Exception(ERROR_CODE)
+#     data.pop('s', None)
 
-logging.info("🎉 阅读脚本已完成！")
+# logging.info("🎉 阅读脚本已完成！")
 
-if PUSH_METHOD not in (None, ''):
-    logging.info("⏱️ 开始推送...")
-    push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{total_ream_time_in_seconds // 60}分钟。", PUSH_METHOD)
+# if PUSH_METHOD not in (None, ''):
+#     logging.info("⏱️ 开始推送...")
+#     push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{total_ream_time_in_seconds // 60}分钟。", PUSH_METHOD)
