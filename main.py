@@ -83,7 +83,7 @@ def pre_reading():
                 button.click(timeout=5000)  # 最多等待5秒找元素
             except Exception as e:
                 logging.error("点击失败，可能找不到按钮：", e)
-            time.sleep(30)
+            time.sleep(3)
                     
         newcookies = context.cookies()
         logging.info(f"Cookies:{newcookies}")
