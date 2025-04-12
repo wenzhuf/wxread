@@ -73,7 +73,7 @@ def pre_reading():
     else:
         logging.warning("No baggage")
     response = requests.get(NOTIFY_URL, headers=headers, cookies=cookies)
-    print(response)
+    logging.info(f"🔄 prereading: {response}")
 
 pre_reading()
 total_ream_time_in_seconds = 0
