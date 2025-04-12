@@ -79,7 +79,7 @@ def pre_reading():
         content = page.content()
         logging.info("Page content:", content[:300])
 
-        page.wait_for_timeout(300000)  # Keep the page open for 5 minutes
+        page.wait_for_timeout(10000)  # Keep the page open for 5 minutes
         browser.close()
 
 pre_reading()
