@@ -51,25 +51,38 @@ def get_wr_skey():
             return cookie.split('=')[-1][:8]
     return None
 
-def pre_reading():
+
+def pre_reading(aacookies):
     from playwright.sync_api import sync_playwright
+
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context()
-        context.add_cookies(cookies)
+
+        # Convert dict to Playwright-compatible list of cookie dicts
+        cookies_list = [
+            {
+                "name": name,
+                "value": value,
+                "domain": ".weread.qq.com",
+                "path": "/"
+            }
+            for name, value in cookies.items()
+        ]
+        context.add_cookies(cookies_list)
+
         page = context.new_page()
-    
         page.goto("https://weread.qq.com/web/reader/ce032b305a9bc1ce0b0dd2akf4b32ef025ef4b9ec30acd6")
         page.wait_for_timeout(5000)
-    
-        cookies = context.cookies()
-        print("Cookies:", cookies)
-    
+
+        newcookies = context.cookies()
+        print("Cookies:", newcookies)
+
         content = page.content()
         print("Page content:", content[:300])
-        page.wait_for_timeout(300000)
-        browser.close()
 
+        page.wait_for_timeout(300000)  # Keep the page open for 5 minutes
+        browser.close()
 
 pre_reading()
 total_ream_time_in_seconds = 0
